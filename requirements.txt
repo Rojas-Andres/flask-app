@@ -1,0 +1,11 @@
+Flask==1.1.4
+psycopg2==2.8.4
+SQLAlchemy==1.4.9
+werkzeug ==0.16.1
+Flask-SQLAlchemy==2.5.1
+PyJWT==1.6.4
+Flask-Script==2.0.6
+Flask-Migrate==2.5.3
+flask_restplus
+redis
+Flask-And-Redis

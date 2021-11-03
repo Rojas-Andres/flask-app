@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+
+{% block body%}
+    <form method="POST" action="/login">
+        <label >Iniciar Sesión</label>
+        <div class="form-group">
+            <span for="user-label" class="dropdown-subtitle" >Usuario o Email</span>
+            <input type="text" class="form-control" id="FormEmail1" placeholder="Usuario" name="FormEmail1" required>
+        </div>
+        <div class="form-group">
+            <span >Contraseña</span>
+            <input type="password" class="form-control" id="FormPassword1" placeholder="Contraseña" name="FormPassword1" required>
+        </div>
+        <button type="submit"  class="btn btn-primary">Ingresar</button>
+
+    </form>
+    
+    <span class="dropdown-item" href="#">¿No tienes usuario?</span>
+    <a href="/registro" class="btn btn-secondary">Registrarse</a>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %} 
+
+{% block body%}
+    <form method="POST" action="/registro">
+        <label >Registro</label>
+        <div class="form-group">
+            <span >Usuario o Email</span>
+            <input type="text" class="form-control" id="FormEmail1" placeholder="Usuario" name="FormEmail1" required>
+        </div>
+        <div class="form-group">
+            <span >Contraseña</span>
+            <input type="password" class="form-control" id="FormPassword1" placeholder="Contraseña" name="FormPassword1" required>
+        </div>
+        <div class="form-group">
+            <span >Cantidad de intentos antes de cambiar la contraseña</span>
+            <input type="password" class="form-control" id="FormPassword1" placeholder="Contraseña" name="FormPassword1" required>
+        </div>
+        <button type="submit"  class="btn btn-primary">Registro</button>
+        <a href="/login" class="btn btn-secondary">Entrar</a>
+    </form>
+    
+{% endblock %}
