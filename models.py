@@ -9,7 +9,7 @@ class Usuario(db.Model):
     id = db.Column(db.Integer,autoincrement=True , primary_key=True)
     username = db.Column(db.String(70),unique=True)
     password = db.Column(db.String(200))
-    cant_intentos = db.Column(db.Integer(200))
+    cant_intentos = db.Column(db.Integer)
     intentos = relationship('Intentos',backref="usuario",cascade="delete,merge")
     contrasGuardadas = relationship('ContrasGuardadas',backref="usuario",cascade="delete,merge")
 
@@ -22,4 +22,5 @@ class ContrasGuardadas(db.Model):
 class Intentos(db.Model):
     __tablename__ = 'intentos'
     id = db.Column(db.Integer,autoincrement=True , primary_key=True)
-    username_id = db.Column(db.Integer,ForeignKey("usuario.id",ondelete="CASCADE"))
+    username_id = db.Column(db.Integer,ForeignKey("usuario.id",ondelete="CASCADE"),unique=True)
+    intentos_act =  db.Column(db.Integer)

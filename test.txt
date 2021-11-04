@@ -1,0 +1,6 @@
+Valida contraseñas:
+AAAAA -> Error la contraseña debe tener una longitud mayor a 8
+AAAAAAAA -> Error al menos un numero
+1AAAAAAA -> Error al menos debe de tener una letra minuscula
+1AAAAAAAa -> Error al menos debe de contener un caracter especial
+1AAAAAAAa@ -> Usuario creado satisfactoriamente

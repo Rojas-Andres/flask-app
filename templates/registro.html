@@ -1,22 +1,31 @@
 {% extends 'base.html' %} 
+{% block title %}
+Registro Usuario
+{% endblock %}
 
 {% block body%}
+    {% if context.message|length > 1 %}
+        <div class="alert alert-{{context.type}} alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ context.message }}
+        </div>
+    {% endif %}
     <form method="POST" action="/registro">
-        <label >Registro</label>
+        <label for="">Registro Usuario</label>
         <div class="form-group">
-            <span >Usuario o Email</span>
-            <input type="text" class="form-control" id="FormEmail1" placeholder="Usuario" name="FormEmail1" required>
+            <span>Usuario</span>
+            <input type="text" class="form-control" id="username" placeholder="Usuario" name="username" required>
         </div>
         <div class="form-group">
-            <span >Contraseña</span>
-            <input type="password" class="form-control" id="FormPassword1" placeholder="Contraseña" name="FormPassword1" required>
+            <span>Contraseña</span>
+            <input type="password" class="form-control" id="password" placeholder="Contraseña" name="password" required>
         </div>
         <div class="form-group">
-            <span >Cantidad de intentos antes de cambiar la contraseña</span>
-            <input type="password" class="form-control" id="FormPassword1" placeholder="Contraseña" name="FormPassword1" required>
+            <span>Cantidad de intentos antes de cambiar la contraseña</span>
+            <input type="number" class="form-control" id="cant_intentos" placeholder="Cantidad intentos" name="cant_intentos" required>
         </div>
-        <button type="submit"  class="btn btn-primary">Registro</button>
-        <a href="/login" class="btn btn-secondary">Entrar</a>
+        <button type="submit" class="btn btn-primary"> Registrar</button>
+        <a href="/">Regresar</a>
     </form>
-    
+
 {% endblock %}

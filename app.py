@@ -5,8 +5,9 @@ import json
 import jwt
 from functools import wraps
 from flask_sqlalchemy import SQLAlchemy
-
-
+from validate import *
+from functions import *
+import datetime
 app = Flask(__name__)
 app.config['SECRET_KEY']='Th1s1ss3cr3t'
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_db
@@ -21,7 +22,7 @@ def require_api_token(func):
     def check_token(*args, **kwargs):
         try:
             # validamos que el token aun este activo
-            data = jwt.decode(session["token-key"], app.config['SECRET_KEY'])
+            data = jwt.decode(session["token"], app.config['SECRET_KEY'])
         except:
             # Borramos toda la session
             session.clear()
@@ -31,22 +32,105 @@ def require_api_token(func):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    context={
+        "message":"",
+        "type":""
+    }
     if request.method == 'POST':
-        return redirect(url_for('Index'))
+        username = request.form["username"]
+        password = request.form["password"]
+        user = valida_user(username)
+        if user : 
+            if check_password_hash(user[2], password):  
+                token = jwt.encode({'public_id': user[1], 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])  
+                session["token"] = token.decode('UTF-8')
+                session["usuario"] = user[1]
+                # Realizar insert 
+                val = update_or_insert(username)
+                if val==1:
+                    return redirect(url_for('cambiarpass'))
+
+                return redirect(url_for('Index'))
+            else:
+                context={
+                    "message":"Contraseña no valida",
+                    "type":"danger"
+                }
+                return render_template('login.html',context=context)
+        else:
+            context={
+                    "message":"El usuario no existe!!",
+                    "type":"danger"
+            }
+            return render_template('login.html',context=context) 
     else:
-        return render_template('login.html')
+        return render_template('login.html',context=context)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    context={
+        "message":"",
+        "type":""
+    }
     if request.method == 'POST':
-        return redirect(url_for('Index'))
+        username = request.form["username"]
+        password = request.form["password"]
+        cant_intentos = int(request.form["cant_intentos"])
+        if cant_intentos==0:
+            context={
+                "message":"La cantidad de intentos debe de ser mayor a 0",
+                "type":"danger"
+            }
+            return render_template('registro.html',context=context)
+        context = valida_password(password)
+        if context["type"]=="danger":
+            return render_template('registro.html',context=context)
+        try:
+            hash_password = generate_password_hash(password,method="sha256")
+            engine.execute(f""" INSERT INTO usuario(username,password,cant_intentos) values('{username}','{hash_password}',{cant_intentos})""")
+            insert_contra_guardadas(username,hash_password)    
+        except:
+            context={
+                "message":"El usuario ya existe en la base de datos intente otro",
+                "type":"danger"
+            }
+        
+            return render_template('registro.html',context=context)
+        
+        return render_template('registro.html',context=context)
     else:
-        return render_template('registro.html')
-
+        return render_template('registro.html',context=context)
+@app.route('/salir', methods=['GET'])
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 @app.route('/')
 @require_api_token
 def Index():
-    return render_template('index.html')
-
+    usuario = session["usuario"]
+    return render_template('index.html',usuario=usuario)
+@app.route('/cambiarpass', methods=['GET', 'POST'])
+@require_api_token
+def cambiarpass():
+    context={
+        "message":"",
+        "type":""
+    }
+    if request.method == 'POST':
+        password = request.form["password"]
+        context = valida_password(password)
+        if context["type"]=="danger":
+            return render_template('cambiar_pass.html',usuario=session["usuario"],context=context)
+        hash_password = generate_password_hash(password,method="sha256")
+        
+        valor = validate_password(session["usuario"],hash_password)
+        if valor == 1:
+            context["type"] = "danger"
+            context["message"] = "Esta contraseña ya la ha usado intente otra"
+            return render_template('cambiar_pass.html',usuario=session["usuario"],context=context) 
+        actualizar_contra(session["usuario"],hash_password)
+        actualizar_intentos(session["usuario"])
+        return redirect(url_for('logout'))
+    return render_template('cambiar_pass.html',usuario=session["usuario"],context=context)
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0")
