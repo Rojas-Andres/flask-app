@@ -82,12 +82,9 @@ def insert_contra_guardadas(username,password):
 def validate_password(username,password):
     id = engine.execute(query.devuelve_id_usuario(username)).one()
     passwords = engine.execute(query.obtener_todas_pass_user(id[0])) 
-    all = passwords.fetchall()
-    
+    all = passwords.fetchall()  
     all = [i[0] for i in all ]
     for i in all:
-        print(i)
-        if check_password_hash(password, i):
-            print("LA CONTRASEÑA EXISTE")
-            
-    return 1
+        if check_password_hash(i, password):
+            return 1
+    return 0

@@ -123,13 +123,14 @@ def cambiarpass():
             return render_template('cambiar_pass.html',usuario=session["usuario"],context=context)
         hash_password = generate_password_hash(password,method="sha256")
         
-        valor = validate_password(session["usuario"],hash_password)
+        valor = validate_password(session["usuario"],password)
         if valor == 1:
             context["type"] = "danger"
             context["message"] = "Esta contraseña ya la ha usado intente otra"
             return render_template('cambiar_pass.html',usuario=session["usuario"],context=context) 
         actualizar_contra(session["usuario"],hash_password)
         actualizar_intentos(session["usuario"])
+        insert_contra_guardadas(session["usuario"],hash_password)
         return redirect(url_for('logout'))
     return render_template('cambiar_pass.html',usuario=session["usuario"],context=context)
 if __name__ == "__main__":

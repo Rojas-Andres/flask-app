@@ -4,3 +4,5 @@ AAAAAAAA -> Error al menos un numero
 1AAAAAAA -> Error al menos debe de tener una letra minuscula
 1AAAAAAAa -> Error al menos debe de contener un caracter especial
 1AAAAAAAa@ -> Usuario creado satisfactoriamente
+1AAAAAAAa@a -> Usuario creado satisfactoriamente
+1AAAAAAAa@aA -> Usuario creado satisfactoriamente
