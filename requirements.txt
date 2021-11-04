@@ -9,3 +9,4 @@ Flask-Migrate==2.5.3
 flask_restplus
 redis
 Flask-And-Redis
+gunicorn
