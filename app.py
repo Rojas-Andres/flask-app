@@ -94,11 +94,13 @@ def registro():
                 "message":"El usuario ya existe en la base de datos intente otro",
                 "type":"danger"
             }
-        
             return render_template('registro.html',context=context)
-        
         return render_template('registro.html',context=context)
     else:
+        context ={
+            "message":"Recuerde debe tener mínimo una minúscula, una mayúscula, un caracter especial, un número, minimo de 8 caracteres, máximo de 15 caracteres",
+            "type":"success"
+        }
         return render_template('registro.html',context=context)
 @app.route('/salir', methods=['GET'])
 def logout():
