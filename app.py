@@ -53,13 +53,13 @@ def login():
                 return redirect(url_for('Index'))
             else:
                 context={
-                    "message":"Contraseña no valida",
+                    "message":"Usuario/contraseña inválidos",
                     "type":"danger"
                 }
                 return render_template('login.html',context=context)
         else:
             context={
-                    "message":"El usuario no existe!!",
+                    "message":"usuario/contraseña inválidos",
                     "type":"danger"
             }
             return render_template('login.html',context=context) 
